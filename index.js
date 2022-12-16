@@ -1,5 +1,4 @@
 // Import and require mysql2
-const mysql = require('mysql2');
 const inquirer = require("inquirer");
 
 // const PORT = process.env.PORT || 3001;
@@ -20,7 +19,7 @@ const inquirer = require("inquirer");
 // );
 
 inquirer
-  .createPromptModule([
+  .prompt([
     {
         type: "list",
         message: "Pick a function",
@@ -28,6 +27,9 @@ inquirer
         choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Change an employee role"],
     }
   ])
+  .then((data) => {
+
+  })
 
 // Hardcoded query: DELETE FROM course_names WHERE id = 3;
 
