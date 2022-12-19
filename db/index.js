@@ -11,7 +11,7 @@ const viewAllDepartments = () => {
 };
 
 const viewAllRoles = () => {
-  connection.query("SELECT * FROM roles JOIN departments ON roles.department_id = departments.id", function (err, results) {
+  connection.query("SELECT r.title, r.role_id, d.department, r.salary  FROM roles r LEFT JOIN departments d ON r.department_id = d.department_id", function (err, results) {
     if (err) {
       console.log(err);
     }
