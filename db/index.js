@@ -1,3 +1,4 @@
+const { default: inquirer } = require("inquirer");
 const connection = require("./connection");
 
 const viewAllDepartments = () => {
@@ -35,5 +36,18 @@ const viewAllEmployees = () => {
   });
 };
 
+const addDepartment = (newDepartment) => {
+  connection.query(
+    `INSERT INTO departments (department)
+    VALUES (?)`, newDepartment, function (err, res) {
+      if(err) {
+        console.log(err);
+      }
+      console.log("added succesfully")
+      return;
+    }
+  )
+}
 
-module.exports = { viewAllDepartments, viewAllRoles ,viewAllEmployees };
+
+module.exports = { viewAllDepartments, viewAllRoles ,viewAllEmployees, addDepartment };

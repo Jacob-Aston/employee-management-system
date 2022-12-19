@@ -4,6 +4,7 @@ const {
   viewAllDepartments,
   viewAllRoles,
   viewAllEmployees,
+  addDepartment,
 } = require("./db/index.js");
 
 const inquirerPrompt = () => {
@@ -33,6 +34,19 @@ const inquirerPrompt = () => {
       }
       if (data.function == "View all employees") {
         viewAllEmployees();
+      }
+      if (data.function == "Add a department") {
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              massage: "What department will you add?",
+              name: "newDepartment",
+            },
+          ])
+          .then(({ newDepartment }) => {
+            addDepartment(newDepartment);
+          });
       }
     })
     .catch((err) => {
