@@ -12,13 +12,16 @@ const viewAllDepartments = () => {
 };
 
 const viewAllRoles = () => {
-  connection.query("SELECT r.title, r.role_id, d.department, r.salary  FROM roles r LEFT JOIN departments d ON r.department_id = d.department_id", function (err, results) {
-    if (err) {
-      console.log(err);
+  connection.query(
+    "SELECT r.title, r.role_id, d.department, r.salary  FROM roles r LEFT JOIN departments d ON r.department_id = d.department_id",
+    function (err, results) {
+      if (err) {
+        console.log(err);
+      }
+      console.table(results);
+      return;
     }
-    console.table(results);
-    return;
-  });
+  );
 };
 
 const viewAllEmployees = () => {
@@ -27,27 +30,35 @@ const viewAllEmployees = () => {
     FROM employees e 
     LEFT JOIN roles r ON e.role_id = r.role_id 
     LEFT JOIN departments d ON r.department_id = d.department_id
-    LEFT JOIN employees m ON m.employee_id = e.manager_id`, function (err, results) {
-    if (err) {
-      console.log(err);
+    LEFT JOIN employees m ON m.employee_id = e.manager_id`,
+    function (err, results) {
+      if (err) {
+        console.log(err);
+      }
+      console.table(results);
+      return;
     }
-    console.table(results);
-    return;
-  });
+  );
 };
 
 const addDepartment = (newDepartment) => {
   connection.query(
     `INSERT INTO departments (department)
-    VALUES (?)`, newDepartment, function (err, res) {
-      if(err) {
+    VALUES (?)`,
+    newDepartment,
+    function (err, res) {
+      if (err) {
         console.log(err);
       }
-      console.log("added succesfully")
+      console.log("added succesfully");
       return;
     }
-  )
-}
+  );
+};
 
-
-module.exports = { viewAllDepartments, viewAllRoles ,viewAllEmployees, addDepartment };
+module.exports = {
+  viewAllDepartments,
+  viewAllRoles,
+  viewAllEmployees,
+  addDepartment,
+};

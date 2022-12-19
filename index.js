@@ -48,6 +48,10 @@ const inquirerPrompt = () => {
             addDepartment(newDepartment);
           });
       }
+      if (data.function == "Add a role") {
+        viewAllDepartments();
+        console.log(departments);
+      }
     })
     .catch((err) => {
       console.error(err);
