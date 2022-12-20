@@ -50,39 +50,41 @@ const viewAllEmployees = () => {
   });
 };
 
-const addDepartment = (newDepartment) => {
-  connection.query(
-    `INSERT INTO departments (department)
-    VALUES (?)`,
-    newDepartment,
-    function (err, res) {
-      if (err) {
-        console.log(err);
-      }
-      console.log("added succesfully");
-      return;
-    }
-  );
+const addDepartment = async () => {
+  return new Promise((resolve, reject) => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "Enter a department",
+        name: "department",
+      },
+    ])
+    .then((data) => {
+        console.log("data.department", data.department);
+        connection.query(
+          `INSERT INTO departments (department)
+          VALUES (?)`,
+          data.department,
+          function (err, res) {
+            if (err) {
+              console.error(err);
+              reject(err);
+            }
+            console.log("added succesfully");
+            resolve();
+          }
+        );
+      });
+    });
 };
 
-// const getDepartmentsList = () => {
-//   let departmentList;
-//   connection.query(`SELECT department FROM departments`, function (err, res) {
-//     if (err) {
-//       console.log(err);
-//     }
-//     console.log(res);
-//     departmentList = res;
-//   });
-//   return {
-//     departmentList,
-//   };
-// };
+const addRole = () => {};
 
 module.exports = {
   viewAllDepartments,
   viewAllRoles,
   viewAllEmployees,
   addDepartment,
-  // getDepartmentsList,
+  addRole,
 };

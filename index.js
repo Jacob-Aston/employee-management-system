@@ -5,7 +5,7 @@ const {
   viewAllRoles,
   viewAllEmployees,
   addDepartment,
-  // getDepartmentsList,
+  addRole,
 } = require("./db/index.js");
 
 const inquirerPrompt = () => {
@@ -36,23 +36,12 @@ const inquirerPrompt = () => {
       if (data.function == "View all employees") {
         await viewAllEmployees();
       }
-      // if (data.function == "Add a department") {
-      //   inquirer
-      //     .prompt([
-      //       {
-      //         type: "input",
-      //         massage: "What department will you add?",
-      //         name: "newDepartment",
-      //       },
-      //     ])
-      //     .then(({ newDepartment }) => {
-      //       addDepartment(newDepartment);
-      //     });
-      // }
-      // if (data.function == "Add a role") {
-      //   const departmentList = getDepartmentsList();
-      //   console.log(departmentList);
-      // }
+      if (data.function == "Add a department") {
+        await addDepartment();
+      }
+      if (data.function == "Add a role") {
+        await addRole()
+      }
       inquirerPrompt()
     })
     .catch((err) => {
