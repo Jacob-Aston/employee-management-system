@@ -5,6 +5,7 @@ const {
   viewAllRoles,
   viewAllEmployees,
   addDepartment,
+  // getDepartmentsList,
 } = require("./db/index.js");
 
 const inquirerPrompt = () => {
@@ -25,33 +26,34 @@ const inquirerPrompt = () => {
         ],
       },
     ])
-    .then((data) => {
+    .then( async (data) => {
       if (data.function == "View all departments") {
-        viewAllDepartments();
+        await viewAllDepartments();
       }
       if (data.function == "View all roles") {
-        viewAllRoles();
+        await viewAllRoles();
       }
       if (data.function == "View all employees") {
-        viewAllEmployees();
+        await viewAllEmployees();
       }
-      if (data.function == "Add a department") {
-        inquirer
-          .prompt([
-            {
-              type: "input",
-              massage: "What department will you add?",
-              name: "newDepartment",
-            },
-          ])
-          .then(({ newDepartment }) => {
-            addDepartment(newDepartment);
-          });
-      }
-      if (data.function == "Add a role") {
-        viewAllDepartments();
-        console.log(departments);
-      }
+      // if (data.function == "Add a department") {
+      //   inquirer
+      //     .prompt([
+      //       {
+      //         type: "input",
+      //         massage: "What department will you add?",
+      //         name: "newDepartment",
+      //       },
+      //     ])
+      //     .then(({ newDepartment }) => {
+      //       addDepartment(newDepartment);
+      //     });
+      // }
+      // if (data.function == "Add a role") {
+      //   const departmentList = getDepartmentsList();
+      //   console.log(departmentList);
+      // }
+      inquirerPrompt()
     })
     .catch((err) => {
       console.error(err);
