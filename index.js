@@ -6,6 +6,7 @@ const {
   viewAllEmployees,
   addDepartment,
   addRole,
+  addEmployee,
 } = require("./db/index.js");
 
 const inquirerPrompt = () => {
@@ -23,10 +24,11 @@ const inquirerPrompt = () => {
           "Add a role",
           "Add an employee",
           "Change an employee role",
+          "Close application",
         ],
       },
     ])
-    .then( async (data) => {
+    .then(async (data) => {
       if (data.function == "View all departments") {
         await viewAllDepartments();
       }
@@ -40,9 +42,15 @@ const inquirerPrompt = () => {
         await addDepartment();
       }
       if (data.function == "Add a role") {
-        await addRole()
+        await addRole();
       }
-      inquirerPrompt()
+      if (data.function == "Add an employee") {
+        await addEmployee();
+      }
+      if (data.function == "Close application") {
+        process.exit();
+      }
+      inquirerPrompt();
     })
     .catch((err) => {
       console.error(err);
