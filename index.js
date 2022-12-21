@@ -7,6 +7,7 @@ const {
   addDepartment,
   addRole,
   addEmployee,
+  updateEmployeeRole,
 } = require("./db/index.js");
 
 const inquirerPrompt = () => {
@@ -46,6 +47,9 @@ const inquirerPrompt = () => {
       }
       if (data.function == "Add an employee") {
         await addEmployee();
+      }
+      if (data.function == "Change an employee role") {
+        await updateEmployeeRole ()
       }
       if (data.function == "Close application") {
         process.exit();

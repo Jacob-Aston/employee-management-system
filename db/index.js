@@ -85,7 +85,11 @@ const getDepartments = async () => {
         console.error(err);
         reject(err);
       }
-      resolve(results);
+      const choices = results.map(({ department, department_id }) => ({
+        name: department,
+        value: department_id,
+      }));
+      resolve(choices);
     });
   });
 };
@@ -108,11 +112,7 @@ const insertRole = (responses) => {
 };
 
 const addRole = async () => {
-  const data = await getDepartments();
-  const choices = data.map(({ department, department_id }) => ({
-    name: department,
-    value: department_id,
-  }));
+  const choices = await getDepartments();
   const responses = await inquirer.prompt([
     {
       type: "input",
@@ -143,8 +143,11 @@ const getRoles = async () => {
           console.error(err);
           reject(err);
         }
-        console.log("get roles success")
-        resolve(results);
+        const rolesMapped = results.map(({ title, role_id }) => ({
+          name: title,
+          value: role_id,
+        }));
+        resolve(rolesMapped);
       }
     );
   });
@@ -160,8 +163,11 @@ const getManagers = async () => {
           console.error(err);
           reject(err);
         }
-        console.log("get managers success", results)
-        resolve(results);
+        const managersMapped = results.map(({ employee_id, manager }) => ({
+          name: manager,
+          value: employee_id,
+        }));
+        resolve(managersMapped);
       }
     );
   });
@@ -171,7 +177,12 @@ const insertEmployee = async (responses) => {
   return new Promise((resolve, reject) => {
     connection.query(
       `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`,
-      [responses.first_name, responses.last_name, responses.role_id, responses.manager_id,],
+      [
+        responses.first_name,
+        responses.last_name,
+        responses.role_id,
+        responses.manager_id,
+      ],
       function (err, results) {
         if (err) {
           console.error(err);
@@ -182,22 +193,12 @@ const insertEmployee = async (responses) => {
       }
     );
   });
-}
+};
 
 const addEmployee = async () => {
   const rolesList = await getRoles();
-  const rolesMapped = rolesList.map(({ title, role_id }) => ({
-    name: title,
-    value: role_id,
-  }));
-  console.log("roles", rolesMapped);
   const managersList = await getManagers();
-  console.log(managersList)
-  const managersMapped = managersList.map(({ employee_id, manager }) => ({
-    name: manager,
-    value: employee_id,
-  }));
-  console.log("managers", managersMapped);
+
   const responses = await inquirer.prompt([
     {
       type: "input",
@@ -213,16 +214,70 @@ const addEmployee = async () => {
       type: "list",
       message: "Pick a role",
       name: "role",
-      choices: rolesMapped,
+      choices: rolesList,
     },
     {
       type: "list",
       message: "Pick a manager",
       name: "manager",
-      choices: managersMapped,
+      choices: managersList,
     },
   ]);
   await insertEmployee(responses);
+};
+
+const getEmployees = async () => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `SELECT employees.employee_id, CONCAT(employees.first_name, " ", employees.last_name) AS full_name FROM employees`,
+      function (err, results) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        }
+        const choices = results.map(({ employee_id, full_name }) => ({
+          name: full_name,
+          value: employee_id,
+        }));
+        resolve(choices);
+      }
+    );
+  });
+};
+
+const changeRole = async (responses) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `UPDATE employees SET role_id = ${responses.role} WHERE employees.employee_id = ${responses.employee}`,
+      function (err, results) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        }
+        resolve(results);
+      }
+    );
+  });
+};
+
+const updateEmployeeRole = async () => {
+  const employeeList = await getEmployees();
+  const rolesList = await getRoles();
+  const responses = await inquirer.prompt([
+    {
+      type: "list",
+      message: "Pick an employee to change their role",
+      name: "employee",
+      choices: employeeList,
+    },
+    {
+      type: "list",
+      message: "Pick a new role for your employee",
+      name: "role",
+      choices: rolesList,
+    },
+  ]);
+  changeRole(responses);
 };
 
 module.exports = {
@@ -232,4 +287,5 @@ module.exports = {
   addDepartment,
   addRole,
   addEmployee,
+  updateEmployeeRole,
 };
