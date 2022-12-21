@@ -52,16 +52,15 @@ const viewAllEmployees = () => {
 
 const addDepartment = async () => {
   return new Promise((resolve, reject) => {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "Enter a department",
-        name: "department",
-      },
-    ])
-    .then((data) => {
-        console.log("data.department", data.department);
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "Enter a department",
+          name: "department",
+        },
+      ])
+      .then((data) => {
         connection.query(
           `INSERT INTO departments (department)
           VALUES (?)`,
@@ -76,10 +75,53 @@ const addDepartment = async () => {
           }
         );
       });
-    });
+  });
 };
 
-const addRole = () => {};
+const getDepartments = async () => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "SELECT departments.department FROM departments",
+      function (err, results) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        }
+        console.table(results);
+        const departments = results;
+        console.log("dept", departments);
+        resolve(results);
+      }
+    );
+  });
+};
+
+const addRole = async () => {
+  const data = await getDepartments();
+  const choices = data.map(({ department, department_id }) => ({
+    name: department,
+    value: department_id,
+  }));
+  const responses = await inquirer.prompt([
+    {
+      type: "input",
+      message: "Enter a title for new role",
+      name: "title",
+    },
+    {
+      type: "input",
+      message: "Enter a salary",
+      name: "salary",
+    },
+    {
+      type: "list",
+      message: "Pick a department",
+      name: "department",
+      choices: choices,
+    },
+  ]);
+  console.log(results);
+};
 
 module.exports = {
   viewAllDepartments,
