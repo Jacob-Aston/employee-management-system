@@ -81,20 +81,36 @@ const addDepartment = async () => {
 const getDepartments = async () => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT departments.department FROM departments",
+      "SELECT * FROM departments",
       function (err, results) {
         if (err) {
           console.error(err);
           reject(err);
         }
-        console.table(results);
-        const departments = results;
-        console.log("dept", departments);
         resolve(results);
       }
     );
   });
 };
+
+const insertRole = (responses) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`,
+      [responses.title,
+      responses.salary,
+      responses.department],
+      function (err, results) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        }
+        console.log("successfully inserted: ", responses);
+        resolve(results);
+      }
+    );
+  });
+}
 
 const addRole = async () => {
   const data = await getDepartments();
@@ -120,7 +136,7 @@ const addRole = async () => {
       choices: choices,
     },
   ]);
-  console.log(results);
+  await insertRole(responses);
 };
 
 module.exports = {
