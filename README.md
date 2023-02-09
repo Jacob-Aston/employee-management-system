@@ -11,7 +11,7 @@ This is a command line application to manage employee data. You can add employee
     
 ## Installation
 
-Open a terminal on readme-generator and run an `npm i` command.The run a `node index.js` command to launch the app.
+Open a terminal on `employee-management-system` and run an `npm i` command. Then open another terminal and run `mysql -u root -p`. This will open the mysql shell. In the shell run `SOURCE db/schema.sql;` then run `USE < your database name >;` then do another `SOURCE db/seeds.sql;`. Finall to launch the app return to the node terminal and run `npm run start`. The app should then open in the command line giving you a menu to scroll through.
 
 ## License
 
